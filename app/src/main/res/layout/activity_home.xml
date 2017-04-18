@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@android:id/tabhost"
+    >
+
+    <LinearLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:orientation="vertical"
+        tools:context="com.example.coder_z.thousandleaves.MainActivity"
+        android:background="@drawable/tree_background"
+        android:weightSum="1">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="472dp"
+            android:id="@android:id/tabcontent"
+            ></FrameLayout>
+
+        <TabWidget
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@android:id/tabs">
+
+        </TabWidget>
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:orientation="horizontal"
+        android:background="@drawable/mmfooter_bg"
+        android:paddingTop="8dp"
+        android:layout_gravity="bottom"
+        android:id="@+id/radio_group">
+        <RadioButton
+            android:checked="true"
+            android:text="@string/text_home"
+            android:textColor="@color/tab_text"
+            android:id="@+id/main"
+            style="@style/tab_button_bg"/>
+        <RadioButton
+            android:text="@string/text_forest"
+            android:textColor="@color/tab_text"
+            android:id="@+id/forest"
+            style="@style/tab_button_bg"
+            android:layout_height="35dp"
+            android:layout_width="0dp" />
+        <RadioButton
+            android:text="@string/text_data"
+            android:textColor="@color/tab_text"
+            android:id="@+id/data"
+            style="@style/tab_button_bg" />
+        <RadioButton
+            android:text="@string/text_contact"
+            android:textColor="@color/tab_text"
+            android:id="@+id/contact"
+            android:drawableTop="@drawable/tab_address_normal"
+            style="@style/tab_button_bg"/>
+
+    </RadioGroup>
+</TabHost>
