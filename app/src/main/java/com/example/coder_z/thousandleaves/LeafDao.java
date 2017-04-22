@@ -1,5 +1,6 @@
 package com.example.coder_z.thousandleaves;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,6 +22,9 @@ public class LeafDao {
     private DBOpenHelper mDBOpenHelper;
     private int version=1;
 
+    LeafDao(Context context) {
+        this.context=context;
+    }
 
     public Leaf[] queryAll(){
         Cursor cursor= m_db.query(TABLE_NAME,
@@ -38,6 +42,23 @@ public class LeafDao {
         Cursor cursor= m_db.query(TABLE_NAME,
                 new String[]{COLUMN_ID,COLUMN_NAME,COLUMN_DESCRIBE,COLUMN_IMGURL},COLUMN_NAME+"="+name,null,null,null,null);
         return ConvertToLeaf(cursor)[0];
+    }
+
+    public void insertLeaf(Leaf leaf){
+        m_db.execSQL("insert into "+TABLE_NAME+"("+COLUMN_ID+","+COLUMN_NAME+","+COLUMN_DESCRIBE+","+COLUMN_IMGURL
+                                                +") values"+"("+leaf.getId()+","+leaf.getName()+","+leaf.getDesciption()+","+leaf.getImgUrl()+")");
+    }
+
+    public long insert(Leaf leaf) {
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(COLUMN_ID,leaf.getId());
+        contentValues.put(COLUMN_NAME,leaf.getName());
+        contentValues.put(COLUMN_DESCRIBE,leaf.getDesciption());
+        contentValues.put(COLUMN_IMGURL,leaf.getImgUrl());
+        return m_db.insert(TABLE_NAME,null,contentValues);
+    }
+
+    public void deleteLeaf(){
 
     }
 

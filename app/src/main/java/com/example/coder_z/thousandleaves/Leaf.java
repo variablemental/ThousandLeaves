@@ -6,12 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by coder-z on 17-4-11.
  */
 
-public abstract class Leaf /*extends RealmObject*/ {
+public class Leaf implements Serializable /*extends RealmObject*/ {
     private int id;
     private String name;
     private String desciption;
@@ -35,10 +36,13 @@ public abstract class Leaf /*extends RealmObject*/ {
         return realm.where(Leaf.class).findAllSorted("id", Sort.DESCENDING);
     }*/
 
-    public abstract Bitmap getLeafScaledImage(Activity activity);
+    public  Bitmap getLeafScaledImage(Activity activity){
+        return null;
+    }
 
-    public abstract Bitmap getLeafNormalImage();
-
+    public  Bitmap getLeafNormalImage(){
+        return null;
+    }
 
     public void setId(int id){
         this.id=id;

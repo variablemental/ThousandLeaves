@@ -6,4 +6,7 @@
     <string name="text_data">资料库</string>
     <string name="photo_manage">管理照片</string>
     <string name="text_contact">我</string>
+    <string name="description_title">名称</string>
+    <string name="description_content">描述</string>
+
 </resources>

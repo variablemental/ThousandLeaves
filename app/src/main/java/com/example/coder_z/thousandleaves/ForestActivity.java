@@ -1,13 +1,19 @@
 package com.example.coder_z.thousandleaves;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,19 +41,26 @@ import io.realm.RealmResults;*/
  * Created by coder-z on 17-3-19.
  */
 
-public class ForestActivity extends Activity /*implements AdapterView.OnItemClickListener*/{
+public class ForestActivity extends Activity implements AdapterView.OnItemClickListener{
     public static final String Tag="ForestActivity";
+    public static final String FRAGMENT_BUNDLE="FRAGMENT_BUNDLE";
+    public static final String FRAGMENT_LEAF="FRAGMENT_LEAF";
     //private RealmResults<Leaf> least_leaf;
+    private SearchView mSearchView;
     private ListView mListView;
     private ListAdapter adapter;
     //private Realm realm=Realm.getDefaultInstance();
     public List<Leaf> leaves;
-    /*   @Override
+    LeafDao dao=new LeafDao(this);
+    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-
-    }*/
+        Leaf leaf=leaves.get(i);
+        Bundle bundle=new Bundle();
+        bundle.putSerializable(FRAGMENT_LEAF,leaf);
+        Intent intent=new Intent(ForestActivity.this,LeafFragmentActivity.class);
+        intent.putExtra(FRAGMENT_BUNDLE,bundle);
+        startActivity(intent);
+    }
 
     public class ListAdapter extends BaseAdapter{
 
@@ -114,9 +127,29 @@ public class ForestActivity extends Activity /*implements AdapterView.OnItemClic
         setContentView(R.layout.info_activity);
         /*least_leaf=Leaf.all(realm);*/
         mListView=(ListView)findViewById(R.id.list_view);
+        mSearchView=(SearchView)findViewById(R.id.search_view);
        // mListView.setOnItemClickListener(this);
         adapter=new ListAdapter(this,testE());
         mListView.setAdapter(adapter);
+        mListView.setTextFilterEnabled(true);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+               if(!newText.equals("")){
+                   mListView.setFilterText(newText);
+               }else{
+                   mListView.clearTextFilter();
+               }
+               return false;
+            }
+        });
+
+
     }
 
     private List<Leaf> testE(){
@@ -128,9 +161,6 @@ public class ForestActivity extends Activity /*implements AdapterView.OnItemClic
         list.add(new Leaf(5,"willow","sssssss",""));
         return list;
     }
-
-
-
 
 
 

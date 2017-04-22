@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements Imageable{
 
     public static String TAG="MainActivity";
     private static String IMG_TAG="image";
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity{
         Log.d(TAG,TAG+"start");
     }
 
-    private void showPhoto(String filename) {
+    public void showPhoto(String filename) {
         String path=this.getFileStreamPath(filename).getAbsolutePath();
         BitmapDrawable b= PictureUtil.getScaledDrawable(this,path);
         mImageView.setImageDrawable(b);

@@ -20,6 +20,7 @@ public class ImageFragment extends DialogFragment {
         args.putSerializable(PATH_TAG,path);
         ImageFragment fragment=new ImageFragment();
         fragment.setArguments(args);
+
         fragment.setStyle(DialogFragment.STYLE_NO_TITLE,0);
         return fragment;
     }

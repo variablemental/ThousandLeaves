@@ -77,4 +77,5 @@ public class PictureUtil {
         }
         return pixels;
     }
+
 }
