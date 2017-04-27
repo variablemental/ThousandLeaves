@@ -50,7 +50,7 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
     private ListView mListView;
     private ListAdapter adapter;
     //private Realm realm=Realm.getDefaultInstance();
-    public List<Leaf> leaves;
+    public List<Leaf> leaves=new LinkedList<>();
     LeafDao dao=new LeafDao(this);
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -70,8 +70,15 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
 
         ListAdapter(Context context,List<Leaf> leafs){
             mContext=context;
-            leaves=leafs;
+            init();
             layoutInflater=LayoutInflater.from(mContext);
+        }
+
+        public void init() {
+            Leaf[] buffer=dao.queryAll();
+            for(int i=0;i<buffer.length;i++) {
+                leaves.add(buffer[i]);
+            }
         }
 
         @Override
@@ -91,8 +98,8 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            View v=layoutInflater.inflate(R.layout.info_list_item,null);
-            ImageView img=(ImageView)v.findViewById(R.id.leaf_image);
+            View v=layoutInflater.inflate(R.layout.leaf_list_item,null);
+            ImageView img=(ImageView)v.findViewById(R.id.list_item_image);
             /**
              * 通过ImgUrl获取图片路径
              * 先用list存储，往后使用Realm
@@ -100,10 +107,8 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
             Leaf leaf=leaves.get(i);
            // Bitmap bitmap= getLocalBitMap(leaf.getImgUrl());
            // img.setImageBitmap(bitmap);
-            TextView title=(TextView)v.findViewById(R.id.leaf_name);
+            TextView title=(TextView)v.findViewById(R.id.list_item_TextView);
             title.setText(leaf.getName());
-            TextView description=(TextView)v.findViewById(R.id.leaf_describe);
-            title.setText(leaf.getDesciption());
             return v;
         }
 
@@ -125,10 +130,12 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
     protected void onCreate(Bundle savedInstancedState){
         super.onCreate(savedInstancedState);
         setContentView(R.layout.info_activity);
+        dao.open();
+        Demo();
         /*least_leaf=Leaf.all(realm);*/
         mListView=(ListView)findViewById(R.id.list_view);
         mSearchView=(SearchView)findViewById(R.id.search_view);
-       // mListView.setOnItemClickListener(this);
+        mListView.setOnItemClickListener(this);
         adapter=new ListAdapter(this,testE());
         mListView.setAdapter(adapter);
         mListView.setTextFilterEnabled(true);
@@ -149,7 +156,6 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
             }
         });
 
-
     }
 
     private List<Leaf> testE(){
@@ -160,6 +166,12 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
         list.add(new Leaf(4,"huaishu","kkkkkk",""));
         list.add(new Leaf(5,"willow","sssssss",""));
         return list;
+    }
+
+    private void Demo() {
+        dao.insert(new Leaf(1,"梧桐","xxxxxxx",""));
+        dao.insert(new Leaf(2,"桑椹","yyyyyyy",""));
+        dao.insert(new Leaf(3,"香樟","zzzzzzz",""));
     }
 
 

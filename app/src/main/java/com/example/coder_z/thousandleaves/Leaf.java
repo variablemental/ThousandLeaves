@@ -22,7 +22,7 @@ public class Leaf implements Serializable /*extends RealmObject*/ {
         this.id=id;
         this.name=name;
         this.desciption=description;
-        this.ImgUrl=ImgUrl;
+        this.ImgUrl=imgUrl;
     }
 
     public Leaf(Leaf leaf){

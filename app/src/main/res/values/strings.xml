@@ -8,5 +8,9 @@
     <string name="text_contact">我</string>
     <string name="description_title">名称</string>
     <string name="description_content">描述</string>
+    <string name="title_forest">我的收藏</string>
+    <string name="title_info">地图</string>
+    <string name="title_setting">设置</string>
+    <string name="title_leaf_fragment">具体信息</string>
 
 </resources>

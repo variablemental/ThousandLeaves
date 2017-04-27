@@ -107,12 +107,12 @@ public class LeafDao {
 
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            m_db.execSQL(CREATE_COMMAND);
+            sqLiteDatabase.execSQL(CREATE_COMMAND);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-            m_db.execSQL(DROP_COMMAND);
+            sqLiteDatabase.execSQL(DROP_COMMAND);
             onCreate(m_db);
         }
     }

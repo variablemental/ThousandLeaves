@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.telecom.PhoneAccount;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.PixelCopy;
+
+import java.io.FileNotFoundException;
 
 /**
  * Created by coder-z on 17-4-16.
@@ -21,6 +24,10 @@ public class PictureUtil {
 
     public static BitmapDrawable getScaledDrawable(Activity activity,String path) {
 
+        return new BitmapDrawable(activity.getResources(),getScaledBitmap(activity,path));
+    }
+
+    public static BitmapDrawable getScaledDrawable(Activity activity,Uri path) throws FileNotFoundException {
         return new BitmapDrawable(activity.getResources(),getScaledBitmap(activity,path));
     }
 
@@ -47,6 +54,31 @@ public class PictureUtil {
         options=new BitmapFactory.Options();
         options.inSampleSize=inSimpleSize;
         return BitmapFactory.decodeFile(path, options);
+    }
+
+    public static Bitmap getScaledBitmap(Activity activity, Uri path) throws FileNotFoundException {
+        Display display=activity.getWindowManager().getDefaultDisplay();
+        float destWidth=display.getWidth();
+        float destHeight=display.getHeight();
+
+        BitmapFactory.Options options=new BitmapFactory.Options();
+        Bitmap bitmap=BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(path));
+
+        float outWidth=options.outWidth;
+        float outHeight=options.outHeight;
+
+        int inSimpleSize=1;
+        if(outHeight>destHeight||outWidth>destWidth){
+            if(outHeight>outWidth) {
+                inSimpleSize=Math.round(outHeight/destHeight);
+            }else{
+                inSimpleSize=Math.round(outWidth/destWidth);
+            }
+        }
+        options=new BitmapFactory.Options();
+        options.inSampleSize=inSimpleSize;
+
+        return BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(path));
     }
 
     public static int[][] getBitmapToGrey(Bitmap bitmap){
