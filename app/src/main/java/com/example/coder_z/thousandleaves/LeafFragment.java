@@ -34,7 +34,7 @@ public class LeafFragment extends Fragment implements Imageable {
         mTitle=(EditText) v.findViewById(R.id.leaf_title);
         mTitle.setText(leaf.getName());
         mDetail=(EditText)v.findViewById(R.id.leaf_detail);
-        mDetail.setText(leaf.getDesciption());
+        mDetail.setText(leaf.getDescription());
         if(leaf.getImgUrl()!=null&&!leaf.getImgUrl().equals("")){
             showPhoto(leaf.getImgUrl());
         }
