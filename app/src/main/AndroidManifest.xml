@@ -69,6 +69,8 @@
                   android:label="@string/title_leaf_fragment"
                   >
         </activity>
+        <activity android:name=".InfoActivity"
+                  android:label="@string/title_info"/>
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

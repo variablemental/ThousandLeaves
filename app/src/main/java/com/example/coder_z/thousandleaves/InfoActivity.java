@@ -7,6 +7,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
@@ -29,11 +30,15 @@ public class InfoActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
+        SDKInitializer.initialize(getApplicationContext());
+        setContentView(R.layout.location_activity);
         mapView=(MapView)findViewById(R.id.mapView);
         mBaiduMap=mapView.getMap();
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        mLocationClient=new LocationClient(getApplicationContext());
         initLocation();
-        addMarkedPoint(locationPoint);
+        mLocationClient.registerLocationListener(mListener);
+        //addMarkedPoint(locationPoint);
     }
 
     @Override
