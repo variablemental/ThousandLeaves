@@ -37,6 +37,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:25.0.1'
     compile files('libs/BaiduLBS_Android.jar')
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/volley.jar')
+    compile files('libs/httpmime-4.2.5.jar')
 }
 
 

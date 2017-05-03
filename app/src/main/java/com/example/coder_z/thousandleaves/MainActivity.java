@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,7 +44,10 @@ public class MainActivity extends AppCompatActivity implements Imageable{
 
     private Button mPhotoButton;
     private Button mPhotoManage;
+    private Button mNetTest;
+    private Button mUpLoad;
     private ImageView mImageView;
+
     private Uri imageUri;
 
     private String temp_filename="";
@@ -87,6 +96,35 @@ public class MainActivity extends AppCompatActivity implements Imageable{
             public void onClick(View view) {
                 String path=getFileStreamPath(temp_filename).getAbsolutePath();
                 ImageFragment.newInstance(path).show(getFragmentManager(),IMG_TAG);
+            }
+        });
+        mNetTest=(Button)findViewById(R.id.net_test);
+        mNetTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url="http://www.baidu.com/";
+                StringRequest request=new StrRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG);
+                        System.out.print(s);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.e(TAG,volleyError.toString());
+                    }
+                });
+                LocationApplication.getRequestQueue().add(request);
+            }
+        });
+        mUpLoad=(Button)findViewById(R.id.image_upload);
+        mUpLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageUpLoad upLoad=new ImageUpLoad(getFileStreamPath(temp_filename).getAbsolutePath(),temp_filename,);
+                LocationApplication.getRequestQueue().add(upLoad);
+                LocationApplication.getRequestQueue().start();
             }
         });
 

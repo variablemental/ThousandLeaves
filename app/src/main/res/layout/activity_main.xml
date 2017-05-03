@@ -40,5 +40,18 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="117dp" />
+    <Button
+        android:id="@+id/net_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/photo_manage"
+        android:text="网络测试"/>
+    <Button
+        android:id="@+id/image_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/net_test"
+        android:layout_alignLeft="@id/net_test"
+        android:text="上传"/>
 
 </RelativeLayout>
