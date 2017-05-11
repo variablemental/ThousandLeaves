@@ -53,5 +53,17 @@
         android:layout_below="@id/net_test"
         android:layout_alignLeft="@id/net_test"
         android:text="上传"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_upload"
+        android:layout_below="@id/image_upload"
+        android:id="@+id/image_uploads"
+        android:text="上传测试2"/>
+    <TextView
+        android:id="@+id/text_net_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
 
 </RelativeLayout>

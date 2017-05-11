@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.nfc.Tag;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,8 +36,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,16 +55,20 @@ public class MainActivity extends AppCompatActivity implements Imageable{
     private static String IMG_TAG="image";
     public static final int REQUEST_PHOTO=1;
     private static final int REQUST_ALUBM=2;
-    private static final String POST_SERVER_URL="";
-    private static final String PARAMS_IMG_NAME="IMG_NAME";
-    private static final String PARAMS_IMG_CONTENT="IMG_CONTENT";
+    private static final String POST_SERVER_URL="thousandleaves.chinacloudapp.cn";
+    private static final String PARAMS_IMG_NAME="name";
+    private static final String PARAMS_IMG_CONTENT="image";
+
+    private boolean IsShowingResult=false;
 
 
     private Button mPhotoButton;
     private Button mPhotoManage;
     private Button mNetTest;
     private Button mUpLoad;
+    private Button mUpLoads;
     private ImageView mImageView;
+    private TextView mTestText;
 
     private Uri imageUri;
 
@@ -98,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
             }
         });
         Log.d(TAG,TAG+"start");
+        mTestText=(TextView)findViewById(R.id.text_net_test);
         //Toast.makeText(this,"THis is Main activity",Toast.LENGTH_LONG).show();
         mImageView=(ImageView) findViewById(R.id.image_button);
         mImageView.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         mNetTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url="http://op.juhe.cn/onebox/weather/query?cityname=%E6%B8%A9%E5%B7%9E&key=5fc2b142029b1b0d371d5449a8b8927d";
+                String url="thousandleaves.chinacloudapp.cn";
                 StringRequest request=new StrRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -136,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                     @Override
                     public void onResponse(String s) {
                         dialog.dismiss();
+                        mTestText.setText(s);
                         Toast.makeText(MainActivity.this, "success", Toast.LENGTH_LONG).show();
                     }
 
@@ -151,13 +166,22 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                         Bitmap bitmap=BitmapFactory.decodeFile(getFileStreamPath(temp_filename).getAbsolutePath());
                         String img=getStringImg(bitmap);
                         Map<String,String> params=new HashMap<String, String>();
-                        params.put(PARAMS_IMG_NAME,temp_filename);
-                        params.put(PARAMS_IMG_CONTENT,img);
+                        //params.put(PARAMS_IMG_NAME,temp_filename);
+                        //params.put(PARAMS_IMG_CONTENT,img);
+                        params.put("name","coder_z");
                         return params;
                     }
                 };
                 RequestQueue queue=LocationApplication.getRequestQueue();
                 queue.add(request);
+            }
+        });
+        mUpLoads=(Button)findViewById(R.id.image_uploads);
+        mUpLoads.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ServerTask task=new ServerTask();
+                task.execute(getAbsolutePath(temp_filename));
             }
         });
 
@@ -208,9 +232,14 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         showPhoto(path,false);
     }
 
+
     public void showPhoto(String path,boolean nonesense) {
         BitmapDrawable b= PictureUtil.getScaledDrawable(this,path);
         mImageView.setImageDrawable(b);
+    }
+
+    private String getAbsolutePath(String filename){
+        return this.getFileStreamPath(filename).getAbsolutePath();
     }
 
     //把图片压缩成字符串格式
@@ -221,6 +250,179 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         String strImg= Base64.encodeToString(bytes,Base64.DEFAULT);
         return strImg;
     }
+
+
+
+    public class ServerTask extends AsyncTask<String, Integer , Void> {
+        public byte[] dataToServer;
+        //Task state
+        private final int UPLOADING_PHOTO_STATE  = 0;
+        private final int SERVER_PROC_STATE  = 1;
+        private boolean mCameraReadyFlag=false;
+        private final static String TAG="ServerTask";
+
+        private ProgressDialog dialog;
+        //upload photo to server
+        HttpURLConnection uploadPhoto(FileInputStream fileInputStream)
+        {
+
+            //final String serverFileName = "test"+ (int) Math.round(Math.random()*1000) + ".jpg";
+            final String serverFileName = "test.jpg";
+            final String lineEnd = "\r\n";
+            final String twoHyphens = "--";
+            final String boundary = "*****";
+            final String SERVERURL="http://thousandleaves.chinacloudapp.cn/";
+            Log.e("msg","begin HttpURLConnection......");
+            try
+            {
+                URL url = new URL(SERVERURL);
+                // Open a HTTP connection to the URL
+                final HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                // Allow Inputs
+                conn.setDoInput(true);
+                // Allow Outputs
+                conn.setDoOutput(true);
+                // Don't use a cached copy.
+                conn.setUseCaches(false);
+
+                // Use a post method.
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Connection", "Keep-Alive");
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
+
+                DataOutputStream dos = new DataOutputStream( conn.getOutputStream() );
+
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + serverFileName +"\"" + lineEnd);
+                //dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + serverFileName +"\"" + lineEnd);
+                dos.writeBytes(lineEnd);
+
+                // create a buffer of maximum size
+                int bytesAvailable = fileInputStream.available();
+                int maxBufferSize = 1024;
+                int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                byte[] buffer = new byte[bufferSize];
+
+                // read file and write it into form...
+                int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                while (bytesRead > 0)
+                {
+                    dos.write(buffer, 0, bufferSize);
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                }
+
+                // send multipart form data after file data...
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                publishProgress(SERVER_PROC_STATE);
+                // close streams
+                fileInputStream.close();
+                dos.flush();
+                Log.e("msg","upload finished!");
+                return conn;
+            }
+            catch (MalformedURLException ex){
+                Log.e(TAG, "error: " + ex.getMessage(), ex);
+                return null;
+            }
+            catch (IOException ioe){
+                Log.e(TAG, "error: " + ioe.getMessage(), ioe);
+                return null;
+            }
+        }
+
+        //get image result from server and display it in result view
+        void getResultImage(HttpURLConnection conn){
+            // retrieve the response from server
+            InputStream is;
+            try {
+                is = conn.getInputStream();
+                //get result image from server
+                //resultForWebImage = BitmapFactory.decodeStream(is);
+                is.close();
+                IsShowingResult = true;
+                Log.d("msg","download finished!");
+            } catch (IOException e) {
+                Log.e(TAG,"getResultImage:"+e.toString());
+                e.printStackTrace();
+            }
+        }
+        //Main code for processing image algorithm on the server
+        void processImage(String inputImageFilePath){
+            publishProgress(UPLOADING_PHOTO_STATE);
+            File inputFile = new File(inputImageFilePath);
+            try {
+
+                //create file stream for captured image file
+                FileInputStream fileInputStream  = new FileInputStream(inputFile);
+
+
+                //upload photo
+                final HttpURLConnection  conn = uploadPhoto(fileInputStream);
+
+                //get processed photo from server
+                if (conn != null){
+                    getResultImage(conn);
+                    //String download="http://10.10.145.154/EE368_Android_Tutorial3_Server/computeSIFTOnSCIEN.php";
+
+                }
+                fileInputStream.close();
+            }
+            catch (FileNotFoundException ex){
+                Log.e(TAG, "processImage"+ex.toString());
+            }
+            catch (IOException ex){
+                Log.e(TAG, "processImage"+ex.toString());
+            }
+        }
+
+        public ServerTask() {
+            dialog = new ProgressDialog(MainActivity.this);
+        }
+
+        protected void onPreExecute() {
+            this.dialog.setMessage("Photo captured");
+            this.dialog.show();
+        }
+        @Override
+        protected Void doInBackground(String... params) {           //background operation
+            String uploadFilePath = params[0];
+            processImage(uploadFilePath);
+            //release camera when previous image is processed
+            mCameraReadyFlag = true;
+            return null;
+        }
+        //progress update, display dialogs
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            if(progress[0] == UPLOADING_PHOTO_STATE){
+                dialog.setMessage("Uploading");
+                dialog.show();
+            }
+            else if (progress[0] == SERVER_PROC_STATE){
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                dialog.setMessage("Processing");
+                dialog.show();
+            }
+        }
+        @Override
+        protected void onPostExecute(Void param) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+
+                if(IsShowingResult){
+                    //ShowImage(resultForWebImage, 2);
+                    IsShowingResult=false;
+                }
+            }
+        }
+    }
+
 
 
 }
