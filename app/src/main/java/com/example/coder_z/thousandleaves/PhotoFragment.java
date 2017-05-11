@@ -45,7 +45,7 @@ public class PhotoFragment extends Fragment {
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
             boolean success=true;
-            String filename= UUID.randomUUID().toString()+".jpg";
+            String filename= UUID.randomUUID().toString()+".jpeg";
             FileOutputStream out=null;
             try {
                 out=getActivity().openFileOutput(filename,Context.MODE_PRIVATE);

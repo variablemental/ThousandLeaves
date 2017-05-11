@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
     private static String IMG_TAG="image";
     public static final int REQUEST_PHOTO=1;
     private static final int REQUST_ALUBM=2;
-    private static final String POST_SERVER_URL="thousandleaves.chinacloudapp.cn";
+    private static final String POST_SERVER_URL="http://thousandleaves.chinacloudapp.cn/";
     private static final String PARAMS_IMG_NAME="name";
     private static final String PARAMS_IMG_CONTENT="image";
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         mNetTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url="thousandleaves.chinacloudapp.cn";
+                String url="http://thousandleaves.chinacloudapp.cn/";
                 StringRequest request=new StrRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                             public void onErrorResponse(VolleyError volleyError) {
                                 dialog.dismiss();
                                 Toast.makeText(MainActivity.this,"上传失败",Toast.LENGTH_LONG).show();
+                                //Toast.makeText(MainActivity.this,volleyError.getLocalizedMessage()+"",Toast.LENGTH_LONG).show();
                             }
                         }){
                     @Override
@@ -166,9 +167,9 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                         Bitmap bitmap=BitmapFactory.decodeFile(getFileStreamPath(temp_filename).getAbsolutePath());
                         String img=getStringImg(bitmap);
                         Map<String,String> params=new HashMap<String, String>();
-                        //params.put(PARAMS_IMG_NAME,temp_filename);
-                        //params.put(PARAMS_IMG_CONTENT,img);
-                        params.put("name","coder_z");
+                        params.put(PARAMS_IMG_NAME,temp_filename);
+                        params.put(PARAMS_IMG_CONTENT,img);
+                        //params.put("name","coder_z");
                         return params;
                     }
                 };
@@ -262,6 +263,33 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         private final static String TAG="ServerTask";
 
         private ProgressDialog dialog;
+
+        HttpURLConnection uploadTest() {
+            final String SERVER_URL="http://thousandleaves.chinacloudapp.cn/";
+            try {
+                URL url=new URL(SERVER_URL);
+                final HttpURLConnection connection=(HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+"*****");
+
+
+                return connection;
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }catch (IOException e){
+                e.printStackTrace();
+                return null;
+            }
+
+
+
+        }
+
         //upload photo to server
         HttpURLConnection uploadPhoto(FileInputStream fileInputStream)
         {
@@ -390,7 +418,11 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         @Override
         protected Void doInBackground(String... params) {           //background operation
             String uploadFilePath = params[0];
-            processImage(uploadFilePath);
+            //processImage(uploadFilePath);                         //For testing and avoid funtioning it
+
+
+
+
             //release camera when previous image is processed
             mCameraReadyFlag = true;
             return null;
