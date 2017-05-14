@@ -61,6 +61,14 @@ public class Leaf implements Serializable {
         Name = name;
     }
 
+    public String getLocation() {
+        if(!description.contains("[")){
+            return null;
+        }
+        String[] s=description.split("\\[");
+        return s[s.length-1];
+    }
+
 
     public Bitmap getLeafScaledImage(Activity activity){
         return null;

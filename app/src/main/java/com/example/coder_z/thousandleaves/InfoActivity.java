@@ -1,6 +1,8 @@
 package com.example.coder_z.thousandleaves;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,25 +31,11 @@ public class InfoActivity extends Activity {
     public static final String Tag="INFOACTIVITY";
     MapView  mapView=null;
     BaiduMap mBaiduMap=null;
-    BDLocationListener mListener=new MyLocationListener();
+    BDLocationListener mListener;/*=new MyLocationListener();*/
     LocationService mLocationService=null;
+    LeafDao dao=new LeafDao(this);
 
-
-    @Override
-    public void onCreate(Bundle savedInstaceState) {
-        super.onCreate(savedInstaceState);
-        SDKInitializer.initialize(getApplicationContext());
-        setContentView(R.layout.location_activity);
-        mapView=(MapView)findViewById(R.id.mapView);
-        mBaiduMap=mapView.getMap();
-        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-        mLocationService=((LocationApplication)getApplication()).service;
-        mLocationService.registerLocationListener(mListener);
-        mLocationService.start();
-        //addMarkedPoint(locationPoint);
-    }
-
-    private Handler handler=new Handler(){
+    public Handler handler=new Handler(){
 
         @Override
         public void handleMessage(Message msg){
@@ -64,7 +52,34 @@ public class InfoActivity extends Activity {
     };
 
 
-    public class MyLocationListener implements BDLocationListener{
+    @Override
+    public void onCreate(Bundle savedInstaceState) {
+        super.onCreate(savedInstaceState);
+        SDKInitializer.initialize(getApplicationContext());
+        setContentView(R.layout.location_activity);
+        mapView=(MapView)findViewById(R.id.mapView);
+        mBaiduMap=mapView.getMap();
+        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        mLocationService=((LocationApplication)getApplication()).service;
+        mListener=new MyLocationListener(handler,LOC_MSG);
+        mLocationService.registerLocationListener(mListener);
+        mLocationService.start();
+        //addMarkedPoint(locationPoint);
+        dao.open();
+    }
+
+    private void setOverlay(LatLng point,String path) {
+        Bitmap bitmap= BitmapFactory.decodeFile(path);
+        BitmapDescriptor mark=BitmapDescriptorFactory.fromBitmap(bitmap);
+        OverlayOptions options=new MarkerOptions().position(point).icon(mark);
+        mBaiduMap.addOverlay(options);
+        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(point));
+    }
+
+
+
+
+/*    public class MyLocationListener implements BDLocationListener{
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
@@ -81,7 +96,7 @@ public class InfoActivity extends Activity {
         public void onConnectHotSpotMessage(String s, int i) {
 
         }
-    }
+    }*/
 
     @Override
     public void onDestroy() {
@@ -93,6 +108,18 @@ public class InfoActivity extends Activity {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        if(dao!=null){
+            Leaf[] leafs=dao.queryAll();
+            for(int i=0;i<leafs.length;i++){
+                String location=leafs[i].getLocation();                                                                //还有点问题：没办法过滤非法数据
+                if(location!=null) {
+                    double x = Double.valueOf(location.substring(1, location.indexOf(",")));                           //去掉第一个"["
+                    double y = Double.valueOf(location.substring(location.indexOf(",") + 1, location.length() - 1));  //去掉","和最后一个“]”
+                    setOverlay(new LatLng(x, y), leafs[i].getImgUrl());
+                }
+            }
+        }
+
     }
 
     @Override

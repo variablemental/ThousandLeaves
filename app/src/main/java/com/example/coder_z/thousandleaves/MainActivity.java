@@ -13,6 +13,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.mapapi.model.LatLng;
+import com.example.coder_z.thousandleaves.Service.LocationService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -52,6 +58,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements Imageable{
 
     public static String TAG="MainActivity";
+    public static String LOC_MSG="LOC_MSG";
     private static String IMG_TAG="image";
     public static final int REQUEST_PHOTO=1;
     private static final int REQUST_ALUBM=2;
@@ -60,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements Imageable{
     private static final String PARAMS_IMG_CONTENT="image";
 
     private boolean IsShowingResult=false;
+    private LeafDao dao=new LeafDao(this);
+    private LocationService mService;
+    private BDLocationListener mListener;
+    private String loc_buf="";
 
 
     private Button mPhotoButton;
@@ -74,6 +85,15 @@ public class MainActivity extends AppCompatActivity implements Imageable{
 
     private String temp_filename="";
 
+    private Handler handler=new Handler(){
+      @Override
+      public void handleMessage(Message msg) {
+          super.handleMessage(msg);
+          BDLocation location=msg.getData().getParcelable(LOC_MSG);
+          LatLng point=new LatLng(location.getLatitude(),location.getLongitude());
+          loc_buf=new String(point.latitude+","+point.longitude);
+      }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +171,10 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                     public void onResponse(String s) {
                         dialog.dismiss();
                         mTestText.setText(s);
+                        Leaf leaf=new Leaf(13,"sss","",getFileStreamPath(temp_filename).getAbsolutePath());
+                        if(!loc_buf.equals(""))
+                            leaf.setDescription(leaf.getDescription()+"["+loc_buf);
+                        dao.insert(leaf);
                         Toast.makeText(MainActivity.this, "success", Toast.LENGTH_LONG).show();
                     }
 
@@ -177,14 +201,11 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                 queue.add(request);
             }
         });
-        mUpLoads=(Button)findViewById(R.id.image_uploads);
-        mUpLoads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ServerTask task=new ServerTask();
-                task.execute(getAbsolutePath(temp_filename));
-            }
-        });
+        dao.open();
+        mListener=new MyLocationListener(handler,LOC_MSG);
+        mService=((LocationApplication) getApplication()).service;
+        mService.registerLocationListener(mListener);
+
 
     }
 
@@ -252,208 +273,6 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         return strImg;
     }
 
-
-
-    public class ServerTask extends AsyncTask<String, Integer , Void> {
-        public byte[] dataToServer;
-        //Task state
-        private final int UPLOADING_PHOTO_STATE  = 0;
-        private final int SERVER_PROC_STATE  = 1;
-        private boolean mCameraReadyFlag=false;
-        private final static String TAG="ServerTask";
-
-        private ProgressDialog dialog;
-
-        HttpURLConnection uploadTest() {
-            final String SERVER_URL="http://thousandleaves.chinacloudapp.cn/";
-            try {
-                URL url=new URL(SERVER_URL);
-                final HttpURLConnection connection=(HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Connection", "Keep-Alive");
-                connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+"*****");
-
-
-                return connection;
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return null;
-            }catch (IOException e){
-                e.printStackTrace();
-                return null;
-            }
-
-
-
-        }
-
-        //upload photo to server
-        HttpURLConnection uploadPhoto(FileInputStream fileInputStream)
-        {
-
-            //final String serverFileName = "test"+ (int) Math.round(Math.random()*1000) + ".jpg";
-            final String serverFileName = "test.jpg";
-            final String lineEnd = "\r\n";
-            final String twoHyphens = "--";
-            final String boundary = "*****";
-            final String SERVERURL="http://thousandleaves.chinacloudapp.cn/";
-            Log.e("msg","begin HttpURLConnection......");
-            try
-            {
-                URL url = new URL(SERVERURL);
-                // Open a HTTP connection to the URL
-                final HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-                // Allow Inputs
-                conn.setDoInput(true);
-                // Allow Outputs
-                conn.setDoOutput(true);
-                // Don't use a cached copy.
-                conn.setUseCaches(false);
-
-                // Use a post method.
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Connection", "Keep-Alive");
-                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
-
-                DataOutputStream dos = new DataOutputStream( conn.getOutputStream() );
-
-                dos.writeBytes(twoHyphens + boundary + lineEnd);
-                dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + serverFileName +"\"" + lineEnd);
-                //dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + serverFileName +"\"" + lineEnd);
-                dos.writeBytes(lineEnd);
-
-                // create a buffer of maximum size
-                int bytesAvailable = fileInputStream.available();
-                int maxBufferSize = 1024;
-                int bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                byte[] buffer = new byte[bufferSize];
-
-                // read file and write it into form...
-                int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-                while (bytesRead > 0)
-                {
-                    dos.write(buffer, 0, bufferSize);
-                    bytesAvailable = fileInputStream.available();
-                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-                }
-
-                // send multipart form data after file data...
-                dos.writeBytes(lineEnd);
-                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-                publishProgress(SERVER_PROC_STATE);
-                // close streams
-                fileInputStream.close();
-                dos.flush();
-                Log.e("msg","upload finished!");
-                return conn;
-            }
-            catch (MalformedURLException ex){
-                Log.e(TAG, "error: " + ex.getMessage(), ex);
-                return null;
-            }
-            catch (IOException ioe){
-                Log.e(TAG, "error: " + ioe.getMessage(), ioe);
-                return null;
-            }
-        }
-
-        //get image result from server and display it in result view
-        void getResultImage(HttpURLConnection conn){
-            // retrieve the response from server
-            InputStream is;
-            try {
-                is = conn.getInputStream();
-                //get result image from server
-                //resultForWebImage = BitmapFactory.decodeStream(is);
-                is.close();
-                IsShowingResult = true;
-                Log.d("msg","download finished!");
-            } catch (IOException e) {
-                Log.e(TAG,"getResultImage:"+e.toString());
-                e.printStackTrace();
-            }
-        }
-        //Main code for processing image algorithm on the server
-        void processImage(String inputImageFilePath){
-            publishProgress(UPLOADING_PHOTO_STATE);
-            File inputFile = new File(inputImageFilePath);
-            try {
-
-                //create file stream for captured image file
-                FileInputStream fileInputStream  = new FileInputStream(inputFile);
-
-
-                //upload photo
-                final HttpURLConnection  conn = uploadPhoto(fileInputStream);
-
-                //get processed photo from server
-                if (conn != null){
-                    getResultImage(conn);
-                    //String download="http://10.10.145.154/EE368_Android_Tutorial3_Server/computeSIFTOnSCIEN.php";
-
-                }
-                fileInputStream.close();
-            }
-            catch (FileNotFoundException ex){
-                Log.e(TAG, "processImage"+ex.toString());
-            }
-            catch (IOException ex){
-                Log.e(TAG, "processImage"+ex.toString());
-            }
-        }
-
-        public ServerTask() {
-            dialog = new ProgressDialog(MainActivity.this);
-        }
-
-        protected void onPreExecute() {
-            this.dialog.setMessage("Photo captured");
-            this.dialog.show();
-        }
-        @Override
-        protected Void doInBackground(String... params) {           //background operation
-            String uploadFilePath = params[0];
-            //processImage(uploadFilePath);                         //For testing and avoid funtioning it
-
-
-
-
-            //release camera when previous image is processed
-            mCameraReadyFlag = true;
-            return null;
-        }
-        //progress update, display dialogs
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            if(progress[0] == UPLOADING_PHOTO_STATE){
-                dialog.setMessage("Uploading");
-                dialog.show();
-            }
-            else if (progress[0] == SERVER_PROC_STATE){
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                dialog.setMessage("Processing");
-                dialog.show();
-            }
-        }
-        @Override
-        protected void onPostExecute(Void param) {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-
-                if(IsShowingResult){
-                    //ShowImage(resultForWebImage, 2);
-                    IsShowingResult=false;
-                }
-            }
-        }
-    }
 
 
 

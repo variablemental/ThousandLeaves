@@ -131,7 +131,7 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
         super.onCreate(savedInstancedState);
         setContentView(R.layout.info_activity);
         dao.open();
-        Demo();
+       // Demo();
         /*least_leaf=Leaf.all(realm);*/
         mListView=(ListView)findViewById(R.id.list_view);
         mSearchView=(SearchView)findViewById(R.id.search_view);
