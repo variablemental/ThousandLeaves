@@ -44,8 +44,9 @@ public class LeafFragment extends Fragment implements Imageable {
 
     @Override
     public void showPhoto(String filename) {
-        String path=getActivity().getFileStreamPath(filename).getAbsolutePath();
-        BitmapDrawable b= PictureUtil.getScaledDrawable(getActivity(),path);
+
+            //String path = getActivity().getFileStreamPath(filename).getAbsolutePath();
+            BitmapDrawable b = PictureUtil.getScaledDrawable(getActivity(), filename);
         mImageView.setImageDrawable(b);
     }
 }
