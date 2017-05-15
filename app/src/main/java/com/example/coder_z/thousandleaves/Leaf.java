@@ -65,8 +65,11 @@ public class Leaf implements Serializable {
         if(!description.contains("[")){
             return null;
         }
-        String[] s=description.split("\\[");
-        return s[s.length-1];
+        if(description.matches("(\\w|\\d)*\\[\\d+.\\d+,\\d+.\\d+\\]")){                           //
+            String[] s=description.split("\\[");
+            return s[s.length-1];
+        }
+        return null;
     }
 
 

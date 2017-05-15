@@ -171,9 +171,9 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                     public void onResponse(String s) {
                         dialog.dismiss();
                         mTestText.setText(s);
-                        Leaf leaf=new Leaf(13,"sss","",getFileStreamPath(temp_filename).getAbsolutePath());
+                        Leaf leaf=new Leaf(39,"sss","",getFileStreamPath(temp_filename).getAbsolutePath());
                         if(!loc_buf.equals(""))
-                            leaf.setDescription(leaf.getDescription()+"["+loc_buf);
+                            leaf.setDescription(leaf.getDescription()+"["+loc_buf+"]");
                         dao.insert(leaf);
                         Toast.makeText(MainActivity.this, "success", Toast.LENGTH_LONG).show();
                     }
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         mListener=new MyLocationListener(handler,LOC_MSG);
         mService=((LocationApplication) getApplication()).service;
         mService.registerLocationListener(mListener);
-
+        mService.start();
 
     }
 

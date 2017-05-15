@@ -70,7 +70,8 @@ public class InfoActivity extends Activity {
 
     private void setOverlay(LatLng point,String path) {
         Bitmap bitmap= BitmapFactory.decodeFile(path);
-        BitmapDescriptor mark=BitmapDescriptorFactory.fromBitmap(bitmap);
+        //BitmapDescriptor mark=BitmapDescriptorFactory.fromBitmap(bitmap);                         //= = 这图像大的恐怖，还是先找个方法压缩图片后再拿图片做icon吧
+        BitmapDescriptor mark= BitmapDescriptorFactory.fromResource(R.drawable.huaji);
         OverlayOptions options=new MarkerOptions().position(point).icon(mark);
         mBaiduMap.addOverlay(options);
         mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(point));
@@ -113,7 +114,7 @@ public class InfoActivity extends Activity {
             for(int i=0;i<leafs.length;i++){
                 String location=leafs[i].getLocation();                                                                //还有点问题：没办法过滤非法数据
                 if(location!=null) {
-                    double x = Double.valueOf(location.substring(1, location.indexOf(",")));                           //去掉第一个"["
+                    double x = Double.valueOf(location.substring(0, location.indexOf(",")));                           //去掉第一个"["
                     double y = Double.valueOf(location.substring(location.indexOf(",") + 1, location.length() - 1));  //去掉","和最后一个“]”
                     setOverlay(new LatLng(x, y), leafs[i].getImgUrl());
                 }
