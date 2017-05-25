@@ -31,9 +31,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.baidu.location.BDLocation;
@@ -159,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                         Log.e(TAG,volleyError.toString());
                     }
                 });
+                request.setRetryPolicy(new DefaultRetryPolicy(50000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)); // 设置超时时间
                 LocationApplication.getRequestQueue().add(request);
             }
         });
@@ -199,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                     }
                 };
                 RequestQueue queue=LocationApplication.getRequestQueue();
+                request.setRetryPolicy(new DefaultRetryPolicy(80000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 queue.add(request);
             }
         });
