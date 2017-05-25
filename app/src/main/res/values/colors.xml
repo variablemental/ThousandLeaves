@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffffff</color>
     <color name="grey">#ff666666</color>
+    <color name="transparency">#00000000</color>
+    <color name="title_bg">#FF9ed913</color>
+    <color name="end_color">#A0cfef83</color>
+
 </resources>

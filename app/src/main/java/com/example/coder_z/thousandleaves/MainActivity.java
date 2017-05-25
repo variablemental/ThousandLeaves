@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
     private static String IMG_TAG="image";
     public static final int REQUEST_PHOTO=1;
     private static final int REQUST_ALUBM=2;
-    private static final String POST_SERVER_URL="http://thousandleaves.chinacloudapp.cn/";
+    private static final String POST_SERVER_URL="http://119.23.210.134:8080/wb/process";
     private static final String PARAMS_IMG_NAME="name";
     private static final String PARAMS_IMG_CONTENT="image";
 
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
         mNetTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url="http://thousandleaves.chinacloudapp.cn/";
+                String url="http://119.23.210.134:8080/wb/process";
                 StringRequest request=new StrRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(MainActivity.this,"访问失败",Toast.LENGTH_LONG).show();
                         Log.e(TAG,volleyError.toString());
                     }
                 });

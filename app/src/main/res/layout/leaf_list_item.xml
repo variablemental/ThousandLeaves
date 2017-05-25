@@ -15,14 +15,22 @@
         />
     <TextView
         android:id="@+id/list_item_TextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/list_item_image"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="left"
         android:textStyle="bold"
-        android:text="Crime text"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginLeft="10dp"
         />
 
+    <!--android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:textStyle="bold"
+    android:text="Crime text"-->
 
 </RelativeLayout>
