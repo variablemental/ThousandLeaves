@@ -12,4 +12,12 @@
     <string name="title_info">地图</string>
     <string name="title_setting">设置</string>
     <string name="title_leaf_fragment">具体信息</string>
+    <string name="login_username">帐号</string>
+    <string name="login_password">密码</string>
+    <string name="login_button">登录</string>
+    <string name="username_hint">在此输入你的帐号</string>
+    <string name="password_hint">在此输入你的密码(我会保密的！)</string>
+    <string name="chara_qian">千</string>
+    <string name="chara_bai">百</string>
+    <string name="chara_ye">叶</string>
 </resources>
