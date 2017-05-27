@@ -22,6 +22,7 @@ public class LoginActivity extends Activity {
     private EditText mUsername;
     private EditText mPassword;
     private Button   mLogin;
+    private Button   mRegister;
     private TextView mQian;
     private TextView mBai;
     private TextView mYe;
@@ -56,6 +57,19 @@ public class LoginActivity extends Activity {
                 }
             }
         });
+        mRegister=(Button)findViewById(R.id.register_button);
+        mRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mUsername.getText().toString().isEmpty()||mPassword.getText().toString().isEmpty()){
+                    Toast.makeText(LoginActivity.this,"填好帐号和密码点我直接注册就行了哦！",Toast.LENGTH_LONG).show();
+                    return;
+                }else{
+
+                }
+            }
+        });
+
         mQian=(TextView)findViewById(R.id.chara_qian);
         mBai=(TextView)findViewById(R.id.chara_bai);
         mYe=(TextView)findViewById(R.id.chara_ye);
@@ -69,10 +83,6 @@ public class LoginActivity extends Activity {
 
     }
 
-    private void setTypeface(TextView view){
-        Typeface typeface=Typeface.createFromAsset( getAssets(),font_path);
-        view.setTypeface(typeface);
-    }
 
 
 }

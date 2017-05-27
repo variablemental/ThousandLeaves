@@ -20,4 +20,6 @@
     <string name="chara_qian">千</string>
     <string name="chara_bai">百</string>
     <string name="chara_ye">叶</string>
+    <string name="register_button">注册</string>
+    <string name="recognize_button">识别</string>
 </resources>

@@ -11,7 +11,7 @@
     android:weightSum="1">
 
 
-    <Button
+<!--    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/photo_manage"
@@ -20,7 +20,7 @@
         android:layout_alignBaseline="@+id/photo_button"
         android:layout_alignBottom="@+id/photo_button"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="37dp" />
+        android:layout_marginEnd="37dp" />-->
 
     <Button
         android:layout_width="wrap_content"
@@ -56,37 +56,38 @@
 
 
     <TextView
+        android:id="@+id/result_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/result_label"
         android:textSize="20dp"
         android:padding="5dp"
         android:textColor="@color/colorPrimary"
-        android:text="夹竹桃是声场在卡了撒谎封口机啊是封口机啊是复件可"
         android:layout_marginTop="20dp"/>
     <Button
         android:id="@+id/net_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/photo_manage"
+        android:layout_alignLeft="@id/image_upload"
         android:text="网络测试"
         android:background="@drawable/button_style_test"
-
         />
+
     <Button
         android:id="@+id/image_upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/net_test"
-        android:layout_alignLeft="@id/net_test"
-        android:text="上传"/>
-    <Button
+        android:layout_alignTop="@id/photo_button"
+        android:layout_alignStart="@id/result_label"
+        android:layout_marginLeft="100dp"
+        android:text="@string/recognize_button"
+        android:background="@drawable/button_style_test"/>
+<!--    <Button
+        android:id="@+id/database_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/image_upload"
-        android:layout_below="@id/image_upload"
-        android:id="@+id/image_uploads"
-        android:text="上传测试2"/>
+        android:text="数据库测试"/>-->
     <TextView
         android:id="@+id/text_net_test"
         android:layout_width="wrap_content"

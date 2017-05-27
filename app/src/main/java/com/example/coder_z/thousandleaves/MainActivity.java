@@ -79,9 +79,10 @@ public class MainActivity extends AppCompatActivity implements Imageable{
     private Button mPhotoManage;
     private Button mNetTest;
     private Button mUpLoad;
-    private Button mUpLoads;
+    private Button mDataBase;
     private ImageView mImageView;
     private TextView mTestText;
+    private TextView mResultText;
 
     private Uri imageUri;
 
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                     @Override
                     public void onResponse(String s) {
                         Toast.makeText(MainActivity.this,"访问成功",Toast.LENGTH_LONG).show();
-
+                        mResultText.setText(s);
                         Log.d(TAG,s);
                     }
                 }, new Response.ErrorListener() {
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                     @Override
                     public void onResponse(String s) {
                         dialog.dismiss();
-                        mTestText.setText(s);
+                        mResultText.setText(s);
                         Leaf leaf=new Leaf(39,s,"",getFileStreamPath(temp_filename).getAbsolutePath());
                         if(!loc_buf.equals(""))
                             leaf.setDescription(leaf.getDescription()+"["+loc_buf+"]");
@@ -207,6 +208,17 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                 queue.add(request);
             }
         });
+/*        mDataBase=(Button)findViewById(R.id.database_test);
+        mDataBase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Leaf leaf=new Leaf(39,"夹竹桃z","夹竹桃是。。。。","");
+                dao.insert(leaf);
+            }
+        });*/
+        mResultText=(TextView)findViewById(R.id.result_label);
+
+
         dao.open();
         mListener=new MyLocationListener(handler,LOC_MSG);
         mService=((LocationApplication) getApplication()).service;

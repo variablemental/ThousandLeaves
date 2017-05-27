@@ -51,7 +51,7 @@ public class LeafDao {
 
     public long insert(Leaf leaf) {
         ContentValues contentValues=new ContentValues();
-        contentValues.put(COLUMN_ID,leaf.getId());
+        //contentValues.put(COLUMN_ID,leaf.getId());
         contentValues.put(COLUMN_NAME,leaf.getName());
         contentValues.put(COLUMN_DESCRIBE,leaf.getDescription());
         contentValues.put(COLUMN_IMGURL,leaf.getImgUrl());
