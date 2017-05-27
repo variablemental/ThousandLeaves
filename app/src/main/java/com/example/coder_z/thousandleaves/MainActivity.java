@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                     @Override
                     public void onResponse(String s) {
                         Toast.makeText(MainActivity.this,"访问成功",Toast.LENGTH_LONG).show();
+
                         Log.d(TAG,s);
                     }
                 }, new Response.ErrorListener() {
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                     public void onResponse(String s) {
                         dialog.dismiss();
                         mTestText.setText(s);
-                        Leaf leaf=new Leaf(39,"sss","",getFileStreamPath(temp_filename).getAbsolutePath());
+                        Leaf leaf=new Leaf(39,s,"",getFileStreamPath(temp_filename).getAbsolutePath());
                         if(!loc_buf.equals(""))
                             leaf.setDescription(leaf.getDescription()+"["+loc_buf+"]");
                         dao.insert(leaf);

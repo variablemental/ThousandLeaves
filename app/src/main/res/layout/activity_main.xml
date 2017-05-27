@@ -31,7 +31,8 @@
         android:layout_marginBottom="87dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="55dp" />
+        android:layout_marginStart="55dp"
+        android:background="@drawable/button_style_test"/>
 
     <ImageView
         android:layout_width="100dp"
@@ -40,12 +41,38 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="117dp" />
+
+    <TextView
+        android:id="@+id/result_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="30dp"
+        android:textSize="30dp"
+        android:text="夹竹桃"
+        android:paddingTop="5dp"
+        android:layout_below="@+id/image_button"
+        android:layout_centerHorizontal="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/result_label"
+        android:textSize="20dp"
+        android:padding="5dp"
+        android:textColor="@color/colorPrimary"
+        android:text="夹竹桃是声场在卡了撒谎封口机啊是封口机啊是复件可"
+        android:layout_marginTop="20dp"/>
     <Button
         android:id="@+id/net_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/photo_manage"
-        android:text="网络测试"/>
+        android:text="网络测试"
+        android:background="@drawable/button_style_test"
+
+        />
     <Button
         android:id="@+id/image_upload"
         android:layout_width="wrap_content"
@@ -65,5 +92,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
+
 
 </RelativeLayout>
