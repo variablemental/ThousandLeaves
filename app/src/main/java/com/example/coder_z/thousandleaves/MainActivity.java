@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                 startActivityForResult(intent,REQUEST_PHOTO);
             }
         });
-        mPhotoManage=(Button)findViewById(R.id.photo_manage);
+ /*       mPhotoManage=(Button)findViewById(R.id.photo_manage);
         mPhotoManage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         Intent intent=new Intent(Intent.ACTION_PICK,null);
-                                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image");
                                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                                         startActivityForResult(intent,REQUST_ALUBM);
                                     }
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                         }).create();
                 dialog.show();
             }
-        });
+        });*/
         Log.d(TAG,TAG+"start");
         mTestText=(TextView)findViewById(R.id.text_net_test);
         //Toast.makeText(this,"THis is Main activity",Toast.LENGTH_LONG).show();
