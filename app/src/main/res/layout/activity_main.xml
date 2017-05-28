@@ -49,7 +49,7 @@
         android:textColor="@color/colorPrimaryDark"
         android:layout_marginTop="30dp"
         android:textSize="30dp"
-        android:text="夹竹桃"
+        android:text="@string/welcome_motto"
         android:paddingTop="5dp"
         android:layout_below="@+id/image_button"
         android:layout_centerHorizontal="true" />
@@ -70,6 +70,7 @@
         android:layout_height="wrap_content"
         android:text="网络测试"
         android:background="@drawable/button_style_test"
+        android:visibility="invisible"
         />
 
     <Button
@@ -79,7 +80,7 @@
         android:layout_below="@id/net_test"
         android:layout_alignTop="@id/photo_button"
         android:layout_alignStart="@id/result_label"
-        android:layout_marginLeft="100dp"
+        android:layout_marginLeft="150dp"
         android:text="@string/recognize_button"
         android:background="@drawable/button_style_test"/>
 <!--    <Button
@@ -92,6 +93,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/db_operation"
+        android:text="数据库清空"
+        android:visibility="invisible"
+        android:layout_alignParentRight="true" />
 
 
 </RelativeLayout>

@@ -208,12 +208,15 @@ public class MainActivity extends AppCompatActivity implements Imageable{
                 queue.add(request);
             }
         });
-/*        mDataBase=(Button)findViewById(R.id.database_test);
+/*        mDataBase=(Button)findViewById(R.id.db_operation);
         mDataBase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Leaf leaf=new Leaf(39,"夹竹桃z","夹竹桃是。。。。","");
-                dao.insert(leaf);
+                *//*Leaf leaf=new Leaf(39,"夹竹桃z","夹竹桃是。。。。","");
+                dao.insert(leaf);*//*
+                dao.deleteLeafByName("sss");
+                dao.deleteLeafByName("s");
+                dao.deleteLeafByName("夹竹桃z");
             }
         });*/
         mResultText=(TextView)findViewById(R.id.result_label);

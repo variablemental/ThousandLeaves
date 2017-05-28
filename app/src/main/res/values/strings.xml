@@ -22,4 +22,6 @@
     <string name="chara_ye">叶</string>
     <string name="register_button">注册</string>
     <string name="recognize_button">识别</string>
+    <string name="welcome_motto">欢迎使用千百叶！</string>
+    <string name="location_column">最近一次曾在这遇见它</string>
 </resources>

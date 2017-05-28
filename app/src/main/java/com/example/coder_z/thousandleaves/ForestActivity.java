@@ -155,7 +155,6 @@ public class ForestActivity extends Activity implements AdapterView.OnItemClickL
                return false;
             }
         });
-
     }
 
     private List<Leaf> testE(){

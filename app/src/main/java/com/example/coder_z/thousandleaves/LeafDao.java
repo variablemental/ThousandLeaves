@@ -58,8 +58,8 @@ public class LeafDao {
         return m_db.insert(TABLE_NAME,null,contentValues);
     }
 
-    public void deleteLeaf(){
-
+    public void deleteLeafByName(String name){
+        m_db.execSQL("delete"+TABLE_NAME+" where "+COLUMN_NAME+"="+name);
     }
 
     public void open(){
@@ -98,7 +98,7 @@ public class LeafDao {
                                                                      +COLUMN_DESCRIBE+" text not null,"
                                                                      +COLUMN_IMGURL+" text not null"+");";
 
-        private static final String DROP_COMMAND="DROP TABLE IF EXISTS ";
+        private static final String DROP_COMMAND="DROP TABLE"+TABLE_NAME+"IF EXISTS ";
 
         public DBOpenHelper(Context context,String name,SQLiteDatabase.CursorFactory factory,int version) {
             super(context,name,factory,version);
