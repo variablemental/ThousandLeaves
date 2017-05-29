@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">千百叶</string>
     <string name="photo_button">拍摄</string>
-    <string name="text_home">Home</string>
+    <string name="text_home">识叶</string>
     <string name="text_forest">森林</string>
-    <string name="text_data">资料库</string>
+    <string name="text_data">地图</string>
     <string name="photo_manage">管理照片</string>
-    <string name="text_contact">我</string>
+    <string name="text_contact">关于</string>
     <string name="description_title">名称</string>
     <string name="description_content">描述</string>
     <string name="title_forest">我的收藏</string>

@@ -44,7 +44,8 @@ public class HomeActivity extends TabActivity implements RadioGroup.OnCheckedCha
         tabHost.addTab(tabHost.newTabSpec(Home_Tag).setIndicator("0").setContent(new Intent(HomeActivity.this,MainActivity.class)));
         tabHost.addTab(tabHost.newTabSpec(Forest_Tag).setIndicator("1").setContent(new Intent(HomeActivity.this,ForestActivity.class)));
         tabHost.addTab(tabHost.newTabSpec(Data_Tag).setIndicator("2").setContent(new Intent(HomeActivity.this,InfoActivity.class)));
-        tabHost.addTab(tabHost.newTabSpec(Contact_Tag).setIndicator("3").setContent(new Intent(HomeActivity.this,PhotoFragmentActivity.class)));
+        //tabHost.addTab(tabHost.newTabSpec(Contact_Tag).setIndicator("3").setContent(new Intent(HomeActivity.this,PhotoFragmentActivity.class)));
+        tabHost.addTab(tabHost.newTabSpec(Contact_Tag).setIndicator("3").setContent(new Intent(HomeActivity.this,DataActivity.class)));
         tabHost.setCurrentTab(0);
         Log.d(TAG,TAG+"start");
 
